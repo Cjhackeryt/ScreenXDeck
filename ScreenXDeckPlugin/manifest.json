@@ -1,0 +1,25 @@
+{
+  "manifestVersion": 1,
+  "id": "com.screenxdeck.display",
+  "name": "ScreenXDeck",
+  "version": "0.0.1",
+  "description": "Control Windows display modes, monitors, windows, and brightness from Macro Deck.",
+  "license": "MIT",
+  "compatibility": {
+    "sdk": "3.0.0-beta.12"
+  },
+  "publisher": {
+    "name": "cjhackeryt"
+  },
+  "repository": "https://github.com/Cjhackeryt/ScreenXDeck",
+  "icon": "Assets/icon.svg",
+  "entrypoints": {
+    "win-x64": {
+      "executable": "runtimes/win-x64/ScreenXDeckPlugin.dll",
+      "runtime": {
+        "kind": "FrameworkDependent",
+        "dotnetVersion": "10.0"
+      }
+    }
+  }
+}
