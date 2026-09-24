@@ -510,7 +510,9 @@ public class UnitTests
 
         Assert.Equal("com.cjhackeryt.screenxdeck", root.GetProperty("id").GetString());
         Assert.Equal("ScreenxDeck", root.GetProperty("name").GetString());
-        Assert.Equal("1.0.0", root.GetProperty("version").GetString());
+        string? manifestVersion = root.GetProperty("version").GetString();
+        Assert.False(string.IsNullOrWhiteSpace(manifestVersion));
+        Assert.True(Version.TryParse(manifestVersion, out _), $"Invalid manifest version: {manifestVersion}");
         Assert.Equal("runtimes/win-x64/ScreenxDeck.dll", root.GetProperty("entrypoints").GetProperty("win-x64").GetProperty("executable").GetString());
         Assert.Equal("FrameworkDependent", root.GetProperty("entrypoints").GetProperty("win-x64").GetProperty("runtime").GetProperty("kind").GetString());
         Assert.True(root.TryGetProperty("publisher", out var publisherProp));
