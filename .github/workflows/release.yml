@@ -22,7 +22,5 @@ jobs:
       source: src/ScreenxDeck
       # Pinned: `--prerelease` would pick 3.0.0-preview.10, which sorts above the newer betas.
       cli-version: 3.0.0-beta.13
-      # beta.13's MDC0802 check can fail successful plugins when an action emits
-      # only informational events; keep the release gate from rejecting valid packages.
-      run-stub-host: false
+      run-stub-host: true
       changelog: ${{ github.event.release.body }}
