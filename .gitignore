@@ -1,0 +1,25 @@
+# Build results
+[Bb]in/
+[Oo]bj/
+publish/
+dist/
+
+# Local archives and operating-system files
+*.zip
+*.7z
+desktop.ini
+.DS_Store
+
+# Local tooling and environment files
+.playwright-mcp/
+.env
+.env.*
+
+# User-specific files
+*.user
+*.suo
+.vs/
+.idea/
+
+# Dotnet test results
+TestResults/

@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ScreenxDeck/ScreenxDeck.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/ScreenxDeck.Tests/ScreenxDeck.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+
+  <!-- Common / UI -->
+  <data name="Common.Display1" xml:space="preserve"><value>Display 1</value></data>
+  <data name="Common.Display2" xml:space="preserve"><value>Display 2</value></data>
+  <data name="Common.Display3" xml:space="preserve"><value>Display 3</value></data>
+  <data name="Common.Display4" xml:space="preserve"><value>Display 4</value></data>
+  <data name="Common.AllDisplays" xml:space="preserve"><value>All Displays</value></data>
+  <data name="Common.PrimaryDisplay" xml:space="preserve"><value>Primary Display</value></data>
+  <data name="Common.Pinned" xml:space="preserve"><value>Pinned</value></data>
+  <data name="Common.Unpinned" xml:space="preserve"><value>Unpinned</value></data>
+
+  <!-- Brightness Actions -->
+  <data name="Actions.SetBrightness.Name" xml:space="preserve"><value>Set Brightness</value></data>
+  <data name="Actions.SetBrightness.Description" xml:space="preserve"><value>Sets monitor brightness to an exact percentage (DDC/CI hardware or Gamma fallback).</value></data>
+  <data name="Actions.SetBrightness.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.SetBrightness.Brightness.Label" xml:space="preserve"><value>Brightness (0-100%)</value></data>
+
+  <data name="Actions.AdjustBrightness.Name" xml:space="preserve"><value>Adjust Brightness (Step)</value></data>
+  <data name="Actions.AdjustBrightness.Description" xml:space="preserve"><value>Increases or decreases monitor brightness by a configurable percentage.</value></data>
+  <data name="Actions.AdjustBrightness.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.AdjustBrightness.Delta.Label" xml:space="preserve"><value>Step Amount (e.g. +10 or -10)</value></data>
+
+  <data name="Actions.BrightnessPreset.Name" xml:space="preserve"><value>Brightness Preset</value></data>
+  <data name="Actions.BrightnessPreset.Description" xml:space="preserve"><value>Quickly apply a brightness preset such as 0%, 25%, 50%, 75%, or 100%.</value></data>
+  <data name="Actions.BrightnessPreset.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.BrightnessPreset.Preset.Label" xml:space="preserve"><value>Preset Level</value></data>
+
+  <!-- Refresh Rate Actions -->
+  <data name="Actions.SetRefreshRate.Name" xml:space="preserve"><value>Set Refresh Rate</value></data>
+  <data name="Actions.SetRefreshRate.Description" xml:space="preserve"><value>Sets the refresh rate (e.g. 60Hz, 120Hz, 144Hz, 165Hz, 240Hz) for a display.</value></data>
+  <data name="Actions.SetRefreshRate.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.SetRefreshRate.Hz.Label" xml:space="preserve"><value>Refresh Rate (Hz)</value></data>
+
+  <data name="Actions.RestoreRefreshRate.Name" xml:space="preserve"><value>Restore Previous Refresh Rate</value></data>
+  <data name="Actions.RestoreRefreshRate.Description" xml:space="preserve"><value>Restores the previous refresh rate setting for the selected monitor.</value></data>
+  <data name="Actions.RestoreRefreshRate.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+
+  <!-- Resolution Actions -->
+  <data name="Actions.SetResolution.Name" xml:space="preserve"><value>Set Resolution</value></data>
+  <data name="Actions.SetResolution.Description" xml:space="preserve"><value>Changes the display resolution with pre-validation testing.</value></data>
+  <data name="Actions.SetResolution.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.SetResolution.Resolution.Label" xml:space="preserve"><value>Target Resolution (e.g. 1920x1080)</value></data>
+
+  <data name="Actions.RestoreResolution.Name" xml:space="preserve"><value>Restore Previous Resolution</value></data>
+  <data name="Actions.RestoreResolution.Description" xml:space="preserve"><value>Restores the previous resolution for the selected monitor.</value></data>
+  <data name="Actions.RestoreResolution.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+
+  <!-- Display Mode Actions -->
+  <data name="Actions.SetDisplayMode.Name" xml:space="preserve"><value>Windows Display Mode</value></data>
+  <data name="Actions.SetDisplayMode.Description" xml:space="preserve"><value>Switches Windows display mode: PC screen only, Duplicate, Extend, or Second screen only.</value></data>
+  <data name="Actions.SetDisplayMode.Mode.Label" xml:space="preserve"><value>Display Mode</value></data>
+
+  <data name="Actions.ToggleDuplicateExtend.Name" xml:space="preserve"><value>Toggle Duplicate / Extend</value></data>
+  <data name="Actions.ToggleDuplicateExtend.Description" xml:space="preserve"><value>Toggles between Duplicate (Clone) and Extend display modes.</value></data>
+
+  <!-- Primary Monitor Actions -->
+  <data name="Actions.SetPrimaryMonitor.Name" xml:space="preserve"><value>Set Primary Monitor</value></data>
+  <data name="Actions.SetPrimaryMonitor.Description" xml:space="preserve"><value>Sets any connected monitor as the Windows primary display.</value></data>
+  <data name="Actions.SetPrimaryMonitor.Display.Label" xml:space="preserve"><value>Display to Make Primary</value></data>
+
+  <!-- Orientation Actions -->
+  <data name="Actions.SetOrientation.Name" xml:space="preserve"><value>Set Monitor Orientation</value></data>
+  <data name="Actions.SetOrientation.Description" xml:space="preserve"><value>Rotates display to Landscape, Portrait, Landscape flipped, or Portrait flipped.</value></data>
+  <data name="Actions.SetOrientation.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.SetOrientation.Orientation.Label" xml:space="preserve"><value>Orientation</value></data>
+
+  <!-- Arrangement Actions -->
+  <data name="Actions.SaveArrangement.Name" xml:space="preserve"><value>Save Monitor Arrangement</value></data>
+  <data name="Actions.SaveArrangement.Description" xml:space="preserve"><value>Saves the current multi-monitor coordinates under a profile name.</value></data>
+  <data name="Actions.SaveArrangement.ArrangementName.Label" xml:space="preserve"><value>Arrangement Name</value></data>
+
+  <data name="Actions.RestoreArrangement.Name" xml:space="preserve"><value>Restore Monitor Arrangement</value></data>
+  <data name="Actions.RestoreArrangement.Description" xml:space="preserve"><value>Restores saved multi-monitor coordinates.</value></data>
+  <data name="Actions.RestoreArrangement.ArrangementName.Label" xml:space="preserve"><value>Arrangement Name</value></data>
+
+  <!-- Monitor Power Actions -->
+  <data name="Actions.MonitorPower.Name" xml:space="preserve"><value>Monitor Power</value></data>
+  <data name="Actions.MonitorPower.Description" xml:space="preserve"><value>Puts monitor(s) into standby/off or wakes them up.</value></data>
+  <data name="Actions.MonitorPower.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.MonitorPower.PowerAction.Label" xml:space="preserve"><value>Power Action (Off / Standby / Wake)</value></data>
+
+  <!-- Input Source Actions -->
+  <data name="Actions.SwitchInputSource.Name" xml:space="preserve"><value>Switch Monitor Input Source</value></data>
+  <data name="Actions.SwitchInputSource.Description" xml:space="preserve"><value>Switches DDC/CI monitor input between HDMI 1/2, DisplayPort 1/2, USB-C, etc.</value></data>
+  <data name="Actions.SwitchInputSource.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.SwitchInputSource.InputSource.Label" xml:space="preserve"><value>Input Port</value></data>
+
+  <!-- Profile Actions -->
+  <data name="Actions.ApplyProfile.Name" xml:space="preserve"><value>Apply Display Profile</value></data>
+  <data name="Actions.ApplyProfile.Description" xml:space="preserve"><value>Applies complete multi-monitor layout, resolutions, refresh rates, and brightness.</value></data>
+  <data name="Actions.ApplyProfile.Profile.Label" xml:space="preserve"><value>Profile Name</value></data>
+
+  <!-- Quick Toggle Actions -->
+  <data name="Actions.ToggleBrightness.Name" xml:space="preserve"><value>Toggle Brightness Levels</value></data>
+  <data name="Actions.ToggleBrightness.Description" xml:space="preserve"><value>Toggles between two configured brightness levels (e.g. 20% and 80%).</value></data>
+  <data name="Actions.ToggleBrightness.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.ToggleBrightness.LevelA.Label" xml:space="preserve"><value>Level A (%)</value></data>
+  <data name="Actions.ToggleBrightness.LevelB.Label" xml:space="preserve"><value>Level B (%)</value></data>
+
+  <data name="Actions.ToggleRefreshRate.Name" xml:space="preserve"><value>Toggle Refresh Rates</value></data>
+  <data name="Actions.ToggleRefreshRate.Description" xml:space="preserve"><value>Toggles between two configured refresh rates (e.g. 60Hz and 144Hz).</value></data>
+  <data name="Actions.ToggleRefreshRate.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.ToggleRefreshRate.RateA.Label" xml:space="preserve"><value>Rate A (Hz)</value></data>
+  <data name="Actions.ToggleRefreshRate.RateB.Label" xml:space="preserve"><value>Rate B (Hz)</value></data>
+
+  <data name="Actions.ToggleResolution.Name" xml:space="preserve"><value>Toggle Resolutions</value></data>
+  <data name="Actions.ToggleResolution.Description" xml:space="preserve"><value>Toggles between two configured resolutions (e.g. 1920x1080 and 2560x1440).</value></data>
+  <data name="Actions.ToggleResolution.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.ToggleResolution.ResA.Label" xml:space="preserve"><value>Resolution A</value></data>
+  <data name="Actions.ToggleResolution.ResB.Label" xml:space="preserve"><value>Resolution B</value></data>
+
+  <data name="Actions.ToggleProfiles.Name" xml:space="preserve"><value>Toggle Display Profiles</value></data>
+  <data name="Actions.ToggleProfiles.Description" xml:space="preserve"><value>Toggles between two display profiles (e.g. Gaming and Work).</value></data>
+  <data name="Actions.ToggleProfiles.ProfileA.Label" xml:space="preserve"><value>Profile A</value></data>
+  <data name="Actions.ToggleProfiles.ProfileB.Label" xml:space="preserve"><value>Profile B</value></data>
+
+  <data name="Actions.ToggleInputSource.Name" xml:space="preserve"><value>Toggle Input Sources</value></data>
+  <data name="Actions.ToggleInputSource.Description" xml:space="preserve"><value>Toggles between two DDC/CI monitor inputs (e.g. HDMI 1 and DisplayPort 1).</value></data>
+  <data name="Actions.ToggleInputSource.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+  <data name="Actions.ToggleInputSource.SourceA.Label" xml:space="preserve"><value>Source A</value></data>
+  <data name="Actions.ToggleInputSource.SourceB.Label" xml:space="preserve"><value>Source B</value></data>
+
+  <!-- Window Management Actions -->
+  <data name="Actions.ToggleAlwaysOnTop.Name" xml:space="preserve"><value>Toggle Always on Top</value></data>
+  <data name="Actions.ToggleAlwaysOnTop.Description" xml:space="preserve"><value>Pins or unpins the currently active window on top of all other windows.</value></data>
+
+  <data name="Actions.UnpinAllWindows.Name" xml:space="preserve"><value>Unpin All Windows</value></data>
+  <data name="Actions.UnpinAllWindows.Description" xml:space="preserve"><value>Removes Always on Top from all pinned windows.</value></data>
+
+  <data name="Actions.MoveWindowToDisplay.Name" xml:space="preserve"><value>Move Active Window to Display</value></data>
+  <data name="Actions.MoveWindowToDisplay.Description" xml:space="preserve"><value>Moves the currently focused window to Display 1, 2, 3, or 4.</value></data>
+  <data name="Actions.MoveWindowToDisplay.Display.Label" xml:space="preserve"><value>Destination Display</value></data>
+
+  <data name="Actions.MoveWindowNextPrevious.Name" xml:space="preserve"><value>Move Window to Next/Prev Display</value></data>
+  <data name="Actions.MoveWindowNextPrevious.Description" xml:space="preserve"><value>Cycles the active window to the next or previous monitor.</value></data>
+  <data name="Actions.MoveWindowNextPrevious.Direction.Label" xml:space="preserve"><value>Direction (Next / Previous)</value></data>
+
+  <data name="Actions.MoveCursorToDisplay.Name" xml:space="preserve"><value>Move Cursor to Display</value></data>
+  <data name="Actions.MoveCursorToDisplay.Description" xml:space="preserve"><value>Warps the mouse cursor to the center of Display 1, 2, 3, or 4.</value></data>
+  <data name="Actions.MoveCursorToDisplay.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+
+  <data name="Actions.MaximizeOnDisplay.Name" xml:space="preserve"><value>Maximize Window on Display</value></data>
+  <data name="Actions.MaximizeOnDisplay.Description" xml:space="preserve"><value>Moves active window to selected display and maximizes it.</value></data>
+  <data name="Actions.MaximizeOnDisplay.Display.Label" xml:space="preserve"><value>Target Display</value></data>
+
+</root>
