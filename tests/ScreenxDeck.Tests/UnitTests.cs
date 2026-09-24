@@ -233,7 +233,7 @@ public class UnitTests
         Assert.Equal(0.0, readingDirect.Min);
         Assert.Equal(100.0, readingDirect.Max);
 
-        var readingPrefixed = await provider.ReadAsync("com.screenxdeck.cjhackeryt.screenxdeck_brightness");
+        var readingPrefixed = await provider.ReadAsync("com.cjhackeryt.screenxdeck.screenxdeck_brightness");
         Assert.NotEqual(VariableReading.Unavailable, readingPrefixed);
         Assert.Equal(0.0, readingPrefixed.Min);
         Assert.Equal(100.0, readingPrefixed.Max);
@@ -267,7 +267,7 @@ public class UnitTests
         }
 
         // 7. Test SetValueAsync with prefix and direct name (Macro Deck slider write)
-        var writeResult = await provider.SetValueAsync("com.screenxdeck.cjhackeryt.screenxdeck_brightness", 65);
+        var writeResult = await provider.SetValueAsync("com.cjhackeryt.screenxdeck.screenxdeck_brightness", 65);
         Assert.Equal(VariableWriteStatus.Applied, writeResult.Status);
     }
 
@@ -508,7 +508,7 @@ public class UnitTests
         using var doc = JsonDocument.Parse(json);
         var root = doc.RootElement;
 
-        Assert.Equal("com.screenxdeck.cjhackeryt", root.GetProperty("id").GetString());
+        Assert.Equal("com.cjhackeryt.screenxdeck", root.GetProperty("id").GetString());
         Assert.Equal("ScreenxDeck", root.GetProperty("name").GetString());
         Assert.Equal("1.0.0", root.GetProperty("version").GetString());
         Assert.Equal("runtimes/win-x64/ScreenxDeck.dll", root.GetProperty("entrypoints").GetProperty("win-x64").GetProperty("executable").GetString());

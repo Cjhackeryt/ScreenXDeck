@@ -1,6 +1,6 @@
 {
   "manifestVersion": 1,
-  "id": "com.screenxdeck.cjhackeryt",
+  "id": "com.cjhackeryt.screenxdeck",
   "name": "ScreenxDeck",
   "version": "1.0.0",
   "description": "Comprehensive Windows display, multi-monitor, brightness, refresh rate, resolution, profiles, and window management controls for Macro Deck 3.",
@@ -17,7 +17,7 @@
   "publisher": {
     "name": "CJHackerYT"
   },
-  "repository": "https://github.com/Cjhackeryt/screenxdeck",
+  "repository": "https://github.com/Cjhackeryt/ScreenXDeck",
   "license": "MIT",
   "compatibility": {
     "macroDeck": ">=3.0.0-beta.13"

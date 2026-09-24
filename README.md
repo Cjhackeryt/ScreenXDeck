@@ -5,7 +5,7 @@
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-0078D6.svg)](https://microsoft.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-**Package ID:** `com.screenxdeck.cjhackeryt`  
+**Package ID:** `com.cjhackeryt.screenxdeck`  
 **Version:** `1.0.0`
 
 **ScreenxDeck** is a high-performance Windows display and window management plugin engineered specifically for **Macro Deck 3** on **.NET 10**. It transforms your Macro Deck stream deck into a command center for multi-monitor setups, hardware brightness control, resolution and refresh rate switching, display profiles, and window management.
@@ -144,10 +144,10 @@ ScreenxDeck synchronizes 28 high-frequency variables with the Macro Deck host. T
 ## Installation
 
 ### From Pre-built Package
-1. Get `com.screenxdeck.cjhackeryt-1.0.0.macrodeckplugin` from the `dist/` directory or GitHub Releases.
+1. Get `com.cjhackeryt.screenxdeck-1.0.0.macrodeckplugin` from the `dist/` directory or GitHub Releases.
 2. Open **Macro Deck 3**.
 3. Go to **Plugins** -> **Install from file**.
-4. Select `dist/com.screenxdeck.cjhackeryt-1.0.0.macrodeckplugin`.
+4. Select `dist/com.cjhackeryt.screenxdeck-1.0.0.macrodeckplugin`.
 5. Restart Macro Deck if prompted.
 
 ### From Source
@@ -167,14 +167,14 @@ dotnet test
 .\package.ps1
 ```
 The packaged archive will be generated at:
-`dist/com.screenxdeck.cjhackeryt-1.0.0.macrodeckplugin`
+`dist/com.cjhackeryt.screenxdeck-1.0.0.macrodeckplugin`
 
 ---
 
 ## Configuration & Persistence
 
 Settings are automatically saved in:
-`%APPDATA%\MacroDeck\config\com.screenxdeck.cjhackeryt\settings.json`
+`%APPDATA%\MacroDeck\config\com.cjhackeryt.screenxdeck\settings.json`
 
 Example configuration:
 ```json

@@ -29,7 +29,7 @@ public sealed class SettingsService
         _logger = logger.ForContext<SettingsService>();
 
         string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string configDir = Path.Combine(appData, "MacroDeck", "config", "com.screenxdeck.cjhackeryt");
+        string configDir = Path.Combine(appData, "MacroDeck", "config", "com.cjhackeryt.screenxdeck");
         Directory.CreateDirectory(configDir);
 
         _settingsFilePath = Path.Combine(configDir, "settings.json");
