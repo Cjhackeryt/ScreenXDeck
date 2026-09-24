@@ -12,6 +12,7 @@
         "--self-contained",
         "false",
         "-p:UseAppHost=false",
+        "-p:EnableWindowsTargeting=true",
         "-o",
         "runtimes/win-x64"
       ],
