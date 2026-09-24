@@ -30,17 +30,33 @@ public sealed class MonitorPowerAction(MonitorControlService service, ILogger lo
 
     private sealed class Executor(MonitorControlService service, ILogger logger) : IActionExecutor
     {
-        public Task<ActionResult> ExecuteAsync(ActionExecutionContext context)
+        public async Task<ActionResult> ExecuteAsync(ActionExecutionContext context)
         {
             int display = Convert.ToInt32(context.Parameters.GetValueOrDefault("display")?.ToString() ?? "0", CultureInfo.InvariantCulture);
             string action = context.Parameters.GetValueOrDefault("action")?.ToString() ?? "off";
 
-            bool success = action.Equals("wake", StringComparison.OrdinalIgnoreCase)
+            Task<bool> powerTask = Task.Run(() => action.Equals("wake", StringComparison.OrdinalIgnoreCase)
                 ? service.WakeMonitor(display)
-                : service.TurnMonitorOff(display);
+                : service.TurnMonitorOff(display));
+
+            bool success;
+            try
+            {
+                success = await powerTask.WaitAsync(TimeSpan.FromMilliseconds(250));
+            }
+            catch (TimeoutException)
+            {
+                logger.Warning("MonitorPowerAction timed out: Display={Display}, Action={Action}", display, action);
+                return ActionResult.Failed("MONITOR_POWER_TIMEOUT", "Monitor power operation timed out.");
+            }
+            catch (Exception exception)
+            {
+                logger.Error(exception, "MonitorPowerAction failed: Display={Display}, Action={Action}", display, action);
+                return ActionResult.Failed("MONITOR_POWER_FAILED", "Failed to change monitor power state.");
+            }
 
             logger.Information("MonitorPowerAction executed: Display={Display}, Action={Action}, Success={Success}", display, action, success);
-            return Task.FromResult(success ? ActionResult.Success() : ActionResult.Failed("MONITOR_POWER_FAILED", "Failed to change monitor power state."));
+            return success ? ActionResult.Success() : ActionResult.Failed("MONITOR_POWER_FAILED", "Failed to change monitor power state.");
         }
     }
 }
