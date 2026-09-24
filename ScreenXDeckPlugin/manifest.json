@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "id": "com.screenxdeck.display",
+  "id": "com.cjhackeryt.screenxdeck",
   "name": "ScreenXDeck",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Control Windows display modes, monitors, windows, and brightness from Macro Deck.",
   "license": "MIT",
   "compatibility": {

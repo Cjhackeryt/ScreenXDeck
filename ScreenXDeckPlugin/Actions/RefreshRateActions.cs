@@ -1,18 +1,19 @@
 using MacroDeck.Localization;
 using MacroDeck.Sdk.Actions;
+using ScreenControl;
 
 namespace ScreenXDeckPlugin.Actions;
 
 internal static class RefreshRateParameters
 {
     public static ActionParameter Monitor() =>
-        ActionParameter.Slider("monitor", 1, 8, "Monitor", "Windows monitor slot.", 1, 1);
+        ActionParameter.Slider("monitor", 1, 8, Strings.Params.RefreshRateMonitor.Label(), Strings.Params.RefreshRateMonitor.Description(), 1, 1);
 }
 
 public sealed class RefreshRateStepAction(
     string id,
-    string name,
-    string description,
+    LocalizedText name,
+    LocalizedText description,
     int direction,
     RefreshRateService refreshRates) : IActionDefinition
 {
@@ -31,11 +32,11 @@ public sealed class RefreshRateStepAction(
             {
                 var monitor = ReadMonitor(context) - 1;
                 refreshRates.Step(monitor, direction);
-                return Task.FromResult(ActionResult.Success());
+                return ActionResult.SucceededTask;
             }
             catch (Exception ex)
             {
-                return Task.FromResult(ActionResult.Failed("refresh_rate_failed", ex.Message));
+                return Task.FromResult(ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.RefreshRateFailed(ex.Message)));
             }
         }
     }
@@ -47,12 +48,19 @@ public sealed class RefreshRateStepAction(
 public sealed class SetRefreshRateAction(RefreshRateService refreshRates) : IActionDefinition
 {
     public string Id => "set-refresh-rate";
-    public LocalizedText Name => "Set Refresh Rate";
-    public LocalizedText Description => "Set a monitor refresh rate supported by Windows.";
+    public LocalizedText Name => Strings.Actions.SetRefreshRate.Name();
+    public LocalizedText Description => Strings.Actions.SetRefreshRate.Description();
     public IReadOnlyList<ActionParameter> Parameters { get; } =
     [
         RefreshRateParameters.Monitor(),
-        ActionParameter.Slider("refreshRate", 24, 360, "Refresh Rate (Hz)", "Target refresh rate.", 1, 60)
+        ActionParameter.Slider(
+            "refreshRate",
+            24,
+            360,
+            Strings.Actions.SetRefreshRate.Rate.Label(),
+            Strings.Actions.SetRefreshRate.Rate.Description(),
+            1,
+            60)
     ];
 
     public IActionExecutor CreateExecutor() => new Executor(refreshRates);
@@ -66,11 +74,11 @@ public sealed class SetRefreshRateAction(RefreshRateService refreshRates) : IAct
                 var monitor = Read(context, "monitor", 1) - 1;
                 var rate = Read(context, "refreshRate", 60);
                 refreshRates.Set(monitor, rate);
-                return Task.FromResult(ActionResult.Success());
+                return ActionResult.SucceededTask;
             }
             catch (Exception ex)
             {
-                return Task.FromResult(ActionResult.Failed("refresh_rate_failed", ex.Message));
+                return Task.FromResult(ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.RefreshRateFailed(ex.Message)));
             }
         }
 
@@ -79,3 +87,4 @@ public sealed class SetRefreshRateAction(RefreshRateService refreshRates) : IAct
             int.TryParse(value?.ToString(), out var parsed) ? parsed : fallback;
     }
 }
+

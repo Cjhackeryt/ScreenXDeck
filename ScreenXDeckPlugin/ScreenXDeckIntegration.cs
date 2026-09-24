@@ -20,7 +20,6 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
 {
     private const string BrightnessVariable = "screenxdeck_brightness";
     private const string DisplayModeVariable = "screenxdeck_display_mode";
-    private const string ActiveMonitorVariable = "screenxdeck_active_monitor";
     private const string DisplayConnectedVariable = "screenxdeck_display_connected";
     private const int MaximumMonitorVariables = 4;
     private static readonly TimeSpan VariableRefreshInterval = TimeSpan.FromMilliseconds(500);
@@ -65,8 +64,6 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
             {
                 Write = new VariableWriteCapability { CommitOnRelease = true }
             },
-            VariableDefinition.Eager(ActiveMonitorVariable, VariableType.Text, refreshInterval: VariableRefreshInterval)
-            ,
             VariableDefinition.Eager(DisplayConnectedVariable, VariableType.Boolean, refreshInterval: VariableRefreshInterval)
         };
         for (var index = 0; index < MaximumMonitorVariables; index++)
@@ -98,21 +95,18 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
                 Unit = "Hz"
             });
         }
-        for (var index = 1; index <= MaximumMonitorVariables; index++)
-            variables.Add(DisplayVariables.MonitorBrightness(index));
         Variables = variables;
         Actions =
         [
-            new DisplayModeAction("pc-screen-only", "PC Screen Only", "Show content on the main screen only.", "internal", display),
-            new DisplayModeAction("duplicate", "Duplicate", "Mirror the main screen to all displays.", "clone", display),
-            new DisplayModeAction("extend", "Extend", "Extend the desktop across multiple displays.", "extend", display),
-            new DisplayModeAction("second-screen-only", "Second Screen Only", "Show content on the second screen only.", "external", display),
-            new BrightnessStepAction("brightness-up", "Brightness Up", "Increase monitor brightness.", 10, _brightness),
-            new BrightnessStepAction("brightness-down", "Brightness Down", "Decrease monitor brightness.", -10, _brightness),
-            new SetBrightnessAction(_brightness)
-            ,
-            new RefreshRateStepAction("refresh-rate-up", "Refresh Rate Up", "Increase monitor refresh rate.", 1, _refreshRates),
-            new RefreshRateStepAction("refresh-rate-down", "Refresh Rate Down", "Decrease monitor refresh rate.", -1, _refreshRates),
+            new DisplayModeAction("pc-screen-only", Strings.Actions.PcScreenOnly.Name(), Strings.Actions.PcScreenOnly.Description(), "internal", display),
+            new DisplayModeAction("duplicate", Strings.Actions.Duplicate.Name(), Strings.Actions.Duplicate.Description(), "clone", display),
+            new DisplayModeAction("extend", Strings.Actions.Extend.Name(), Strings.Actions.Extend.Description(), "extend", display),
+            new DisplayModeAction("second-screen-only", Strings.Actions.SecondScreenOnly.Name(), Strings.Actions.SecondScreenOnly.Description(), "external", display),
+            new BrightnessStepAction("brightness-up", Strings.Actions.BrightnessUp.Name(), Strings.Actions.BrightnessUp.Description(), 10, _brightness),
+            new BrightnessStepAction("brightness-down", Strings.Actions.BrightnessDown.Name(), Strings.Actions.BrightnessDown.Description(), -10, _brightness),
+            new SetBrightnessAction(_brightness),
+            new RefreshRateStepAction("refresh-rate-up", Strings.Actions.RefreshRateUp.Name(), Strings.Actions.RefreshRateUp.Description(), 1, _refreshRates),
+            new RefreshRateStepAction("refresh-rate-down", Strings.Actions.RefreshRateDown.Name(), Strings.Actions.RefreshRateDown.Description(), -1, _refreshRates),
             new SetRefreshRateAction(_refreshRates),
             new SetMonitorBrightnessAction(_screenControlMonitors),
             new AdjustMonitorBrightnessAction(_screenControlMonitors),
@@ -162,9 +156,6 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
         _logger.LogDebug("Reading ScreenXDeck variable '{RequestedName}' as '{VariableName}'.", name, variableName);
         if (!variableName.Equals(BrightnessVariable, StringComparison.OrdinalIgnoreCase))
         {
-            if (DisplayVariables.TryParseMonitorBrightnessId(variableName, out var screenControlMonitorIndex))
-                return ReadScreenControlMonitorBrightness(screenControlMonitorIndex);
-
             var screenControlReading = ReadScreenControlVariable(variableName);
             if (screenControlReading is not null)
                 return screenControlReading;
@@ -182,9 +173,6 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
 
                 return VariableReading.Of(_displayMode);
             }
-
-            if (variableName.Equals(ActiveMonitorVariable, StringComparison.OrdinalIgnoreCase))
-                return VariableReading.Of(GetActiveMonitorDescription());
 
             if (variableName.Equals(DisplayConnectedVariable, StringComparison.OrdinalIgnoreCase))
                 return VariableReading.Of(Screen.AllScreens.Length > 0);
@@ -206,8 +194,12 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
                 try
                 {
                     var monitorBrightness = await _brightness.GetDdcBrightnessAsync(monitorIndex, cancellationToken);
-                    return monitorBrightness is int
-                        ? VariableReading.Of(monitorBrightness.Value)
+                    if (monitorBrightness is int value)
+                        return VariableReading.Of((double)value, 0, 100, 1);
+
+                    var screenMonitor = _screenControlMonitors.GetMonitors().FirstOrDefault(m => m.Index == monitorIndex + 1);
+                    return screenMonitor is { SupportsBrightness: true }
+                        ? VariableReading.Of((double)screenMonitor.BrightnessPercent, 0, 100, 1)
                         : VariableReading.Unavailable;
                 }
                 catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
@@ -249,16 +241,6 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
     {
         var variableName = NormalizeVariableName(name);
         _logger.LogDebug("Writing ScreenXDeck variable '{RequestedName}' as '{VariableName}'.", name, variableName);
-        if (DisplayVariables.TryParseMonitorBrightnessId(variableName, out var screenControlMonitorIndex))
-        {
-            var controlBrightness = DisplayParameters.ReadNumberValue(value);
-            if (controlBrightness is null || controlBrightness < 0 || controlBrightness > 100)
-                return VariableWriteResult.InvalidValue();
-
-            return _screenControlMonitors.TrySetBrightness(screenControlMonitorIndex, (int)controlBrightness)
-                ? VariableWriteResult.Applied()
-                : VariableWriteResult.Unavailable("Monitor is unavailable.");
-        }
 
         var screenControlWrite = SetScreenControlVariable(variableName, value);
         if (screenControlWrite is not null)
@@ -285,16 +267,25 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
         {
             if (!TryReadNumeric(value, out var monitorBrightness))
                 return VariableWriteResult.InvalidValue();
+
+            var target = (int)Math.Round(Math.Clamp(monitorBrightness, 0, 100));
             try
             {
                 await _brightness.SetDdcBrightnessAsync(
                     monitorIndex,
-                    (int)Math.Round(Math.Clamp(monitorBrightness, 0, 100)),
+                    target,
                     cancellationToken);
                 return VariableWriteResult.Applied();
             }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
             catch (Exception ex)
             {
+                if (_screenControlMonitors.TrySetBrightness(monitorIndex + 1, target))
+                    return VariableWriteResult.Applied();
+
                 return VariableWriteResult.Failed(ex.Message);
             }
         }
@@ -319,13 +310,6 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
         }
     }
 
-    private VariableReading ReadScreenControlMonitorBrightness(int index)
-    {
-        var monitor = _screenControlMonitors.GetMonitors().FirstOrDefault(item => item.Index == index);
-        return monitor is { SupportsBrightness: true }
-            ? VariableReading.Of((double)monitor.BrightnessPercent, 0, 100, 1)
-            : VariableReading.Unavailable;
-    }
 
     private VariableReading? ReadScreenControlVariable(string name) => name switch
     {
@@ -446,19 +430,22 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
         return separator >= 0 ? value[(separator + 1)..] : value;
     }
 
-    private static string GetActiveMonitorDescription()
+    private string GetMonitorName(int index)
     {
-        var primary = Screen.PrimaryScreen;
-        if (primary is null)
-            return "No primary monitor detected";
+        var names = GetMonitorNames();
+        if (index >= 0 && index < names.Count && !string.IsNullOrWhiteSpace(names[index]))
+            return names[index];
 
-        var bounds = primary.Bounds;
-        var name = GetMonitorNames().FirstOrDefault() ?? primary.DeviceName;
-        return $"{name} — Primary — {bounds.Width}x{bounds.Height} — {Screen.AllScreens.Length} monitor(s)";
+        var screenMonitors = _screenControlMonitors.GetMonitors();
+        var screenMonitor = screenMonitors.FirstOrDefault(m => m.Index == index + 1);
+        if (screenMonitor is not null && !string.IsNullOrWhiteSpace(screenMonitor.Name))
+            return screenMonitor.Name;
+
+        if (index >= 0 && index < Screen.AllScreens.Length)
+            return Screen.AllScreens[index].DeviceName;
+
+        return "Unavailable";
     }
-
-    private static string GetMonitorName(int index) =>
-        GetMonitorNames().ElementAtOrDefault(index) ?? "Unavailable";
 
     private static IReadOnlyList<string> GetMonitorNames()
     {
@@ -470,19 +457,22 @@ public sealed class ScreenXDeckIntegration : IPluginIntegration, IVariableProvid
             var names = new List<string>();
             foreach (ManagementObject monitor in searcher.Get())
             {
-                if (monitor["UserFriendlyName"] is not ushort[] chars)
-                    continue;
-
-                var name = new string(chars.Select(character => (char)character)
-                    .TakeWhile(character => character != '\0')
-                    .ToArray()).Trim();
-                if (!string.IsNullOrWhiteSpace(name))
-                    names.Add(name);
+                if (monitor["UserFriendlyName"] is Array array)
+                {
+                    var chars = array.Cast<object>()
+                        .Select(Convert.ToUInt16)
+                        .Select(c => (char)c)
+                        .TakeWhile(c => c != '\0')
+                        .ToArray();
+                    var name = new string(chars).Trim();
+                    if (!string.IsNullOrWhiteSpace(name))
+                        names.Add(name);
+                }
             }
 
             return names;
         }
-        catch (ManagementException)
+        catch (Exception)
         {
             return [];
         }

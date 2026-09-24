@@ -1,3 +1,5 @@
 <Solution>
   <Project Path="ScreenXDeckPlugin\ScreenXDeckPlugin.csproj" />
+  <Project Path="tests\ScreenXDeck.Tests\ScreenXDeck.Tests.csproj" />
 </Solution>
+

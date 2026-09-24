@@ -1,12 +1,13 @@
 using MacroDeck.Localization;
 using MacroDeck.Sdk.Actions;
+using ScreenControl;
 
 namespace ScreenXDeckPlugin.Actions;
 
 public sealed class DisplayModeAction(
     string id,
-    string name,
-    string description,
+    LocalizedText name,
+    LocalizedText description,
     string mode,
     DisplayModeService display) : IActionDefinition
 {
@@ -28,11 +29,11 @@ public sealed class DisplayModeAction(
             }
             catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
             {
-                return ActionResult.Failed("cancelled", "The display mode change was cancelled.");
+                return ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.Cancelled());
             }
             catch (Exception ex)
             {
-                return ActionResult.Failed("display_mode_failed", ex.Message);
+                return ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.DisplayModeFailed(ex.Message));
             }
         }
     }
@@ -40,8 +41,8 @@ public sealed class DisplayModeAction(
 
 public sealed class BrightnessStepAction(
     string id,
-    string name,
-    string description,
+    LocalizedText name,
+    LocalizedText description,
     int delta,
     MonitorBrightnessService brightness) : IActionDefinition
 {
@@ -63,11 +64,11 @@ public sealed class BrightnessStepAction(
             }
             catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
             {
-                return ActionResult.Failed("cancelled", "The brightness change was cancelled.");
+                return ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.Cancelled());
             }
             catch (Exception ex)
             {
-                return ActionResult.Failed("brightness_failed", ex.Message);
+                return ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.BrightnessFailed(ex.Message));
             }
         }
     }
@@ -76,16 +77,16 @@ public sealed class BrightnessStepAction(
 public sealed class SetBrightnessAction(MonitorBrightnessService brightness) : IActionDefinition
 {
     public string Id => "set-brightness";
-    public LocalizedText Name => "Set Brightness";
-    public LocalizedText Description => "Set monitor brightness to a specific level.";
+    public LocalizedText Name => Strings.Actions.SetBrightness.Name();
+    public LocalizedText Description => Strings.Actions.SetBrightness.Description();
     public IReadOnlyList<ActionParameter> Parameters { get; } =
     [
         ActionParameter.Slider(
             name: "brightness",
             min: 0,
             max: 100,
-            label: "Brightness (%)",
-            description: "Brightness level from 0 to 100.",
+            label: Strings.Actions.SetBrightness.Brightness.Label(),
+            description: Strings.Actions.SetBrightness.Brightness.Description(),
             step: 1,
             defaultValue: 50)
     ];
@@ -105,12 +106,13 @@ public sealed class SetBrightnessAction(MonitorBrightnessService brightness) : I
             }
             catch (OperationCanceledException) when (context.CancellationToken.IsCancellationRequested)
             {
-                return ActionResult.Failed("cancelled", "The brightness change was cancelled.");
+                return ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.Cancelled());
             }
             catch (Exception ex)
             {
-                return ActionResult.Failed("brightness_failed", ex.Message);
+                return ActionResult.Failed(ActionErrorCodes.ProviderError, Strings.Errors.BrightnessFailed(ex.Message));
             }
         }
     }
 }
+

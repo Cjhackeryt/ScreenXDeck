@@ -41,8 +41,6 @@ applied to every monitor that supports WMI or DDC/CI.
 Additional variables:
 
 - `screenxdeck_display_mode` — writable text value: `internal`, `clone`, `extend`, or `external`.
-- `screenxdeck_active_monitor` — live text showing the primary monitor device,
-  resolution, and number of connected displays.
 - `screenxdeck_monitor_1_name` through `screenxdeck_monitor_4_name` — friendly
   monitor model names read from Windows EDID, such as `DELL U2412M`.
 - `screenxdeck_display_connected` — `true` when Windows reports at least one display.
@@ -55,9 +53,8 @@ Refresh-rate actions use Windows display APIs and only apply rates available at 
 monitor's current resolution: **Refresh Rate Up**, **Refresh Rate Down**, and
 **Set Refresh Rate**.
 - `screenxdeck_monitor_1_brightness` through `screenxdeck_monitor_4_brightness` —
-  individual writable DDC/CI monitor brightness variables. Variables remain visible
-  when a monitor is temporarily disconnected; unsupported or disconnected monitors
-  report `Unavailable` and never reuse another monitor's value.
+  individual writable monitor brightness variables with hybrid support for DDC/CI,
+  WMI, and GPU gamma ramp / dimmer fallback for non-DDC/CI displays.
 
 The display-mode variable now queries the live Windows display topology, so it
 updates when the mode is changed outside Macro Deck. The slider binding's
@@ -76,11 +73,18 @@ may reduce color range while active.
 
 ## Build and package
 
-From the repository root:
+Using the `macrodeck-plugin` CLI:
 
 ```powershell
-dotnet restore ScreenXDeckPlugin\ScreenXDeckPlugin.csproj
-dotnet build ScreenXDeckPlugin\ScreenXDeckPlugin.csproj -c Release
+macrodeck-plugin build --source ScreenXDeckPlugin --output artifacts --force
+macrodeck-plugin test --artifact artifacts\com.cjhackeryt.screenxdeck-0.1.0.macroDeckPlugin
+```
+
+Or manually via `dotnet`:
+
+```powershell
+dotnet restore ScreenXDeck.slnx
+dotnet build ScreenXDeck.slnx -c Release
 $build = "ScreenXDeckPlugin\bin\Release\net10.0-windows"
 $staging = "dist\staging"
 New-Item -ItemType Directory -Force "$staging\runtimes\win-x64" | Out-Null
@@ -90,5 +94,6 @@ Remove-Item "$staging\runtimes\win-x64\Assets" -Recurse -Force -ErrorAction Sile
 Copy-Item "ScreenXDeckPlugin\manifest.json" $staging -Force
 Copy-Item "ScreenXDeckPlugin\Assets" $staging -Recurse -Force
 macrodeck-plugin validate --directory $staging
-macrodeck-plugin pack --source $staging --output dist\com.screenxdeck.display.macroDeckPlugin --force
+macrodeck-plugin pack --source $staging --output dist\com.cjhackeryt.screenxdeck-0.1.0.macroDeckPlugin --force
 ```
+

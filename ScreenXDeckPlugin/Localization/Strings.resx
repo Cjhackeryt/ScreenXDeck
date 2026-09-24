@@ -266,4 +266,94 @@
   <data name="Errors.ReadOnlyVariable" xml:space="preserve">
     <value>This variable is read-only.</value>
   </data>
+  <data name="Actions.PcScreenOnly.Name" xml:space="preserve">
+    <value>PC Screen Only</value>
+  </data>
+  <data name="Actions.PcScreenOnly.Description" xml:space="preserve">
+    <value>Show content on the main screen only.</value>
+  </data>
+  <data name="Actions.Duplicate.Name" xml:space="preserve">
+    <value>Duplicate</value>
+  </data>
+  <data name="Actions.Duplicate.Description" xml:space="preserve">
+    <value>Mirror the main screen to all displays.</value>
+  </data>
+  <data name="Actions.Extend.Name" xml:space="preserve">
+    <value>Extend</value>
+  </data>
+  <data name="Actions.Extend.Description" xml:space="preserve">
+    <value>Extend the desktop across multiple displays.</value>
+  </data>
+  <data name="Actions.SecondScreenOnly.Name" xml:space="preserve">
+    <value>Second Screen Only</value>
+  </data>
+  <data name="Actions.SecondScreenOnly.Description" xml:space="preserve">
+    <value>Show content on the second screen only.</value>
+  </data>
+  <data name="Actions.BrightnessUp.Name" xml:space="preserve">
+    <value>Brightness Up</value>
+  </data>
+  <data name="Actions.BrightnessUp.Description" xml:space="preserve">
+    <value>Increase monitor brightness.</value>
+  </data>
+  <data name="Actions.BrightnessDown.Name" xml:space="preserve">
+    <value>Brightness Down</value>
+  </data>
+  <data name="Actions.BrightnessDown.Description" xml:space="preserve">
+    <value>Decrease monitor brightness.</value>
+  </data>
+  <data name="Actions.SetBrightness.Name" xml:space="preserve">
+    <value>Set Brightness</value>
+  </data>
+  <data name="Actions.SetBrightness.Description" xml:space="preserve">
+    <value>Set monitor brightness to a specific level.</value>
+  </data>
+  <data name="Actions.SetBrightness.Brightness.Label" xml:space="preserve">
+    <value>Brightness (%)</value>
+  </data>
+  <data name="Actions.SetBrightness.Brightness.Description" xml:space="preserve">
+    <value>Brightness level from 0 to 100.</value>
+  </data>
+  <data name="Actions.RefreshRateUp.Name" xml:space="preserve">
+    <value>Refresh Rate Up</value>
+  </data>
+  <data name="Actions.RefreshRateUp.Description" xml:space="preserve">
+    <value>Increase monitor refresh rate.</value>
+  </data>
+  <data name="Actions.RefreshRateDown.Name" xml:space="preserve">
+    <value>Refresh Rate Down</value>
+  </data>
+  <data name="Actions.RefreshRateDown.Description" xml:space="preserve">
+    <value>Decrease monitor refresh rate.</value>
+  </data>
+  <data name="Actions.SetRefreshRate.Name" xml:space="preserve">
+    <value>Set Refresh Rate</value>
+  </data>
+  <data name="Actions.SetRefreshRate.Description" xml:space="preserve">
+    <value>Set a monitor refresh rate supported by Windows.</value>
+  </data>
+  <data name="Actions.SetRefreshRate.Rate.Label" xml:space="preserve">
+    <value>Refresh Rate (Hz)</value>
+  </data>
+  <data name="Actions.SetRefreshRate.Rate.Description" xml:space="preserve">
+    <value>Target refresh rate.</value>
+  </data>
+  <data name="Params.RefreshRateMonitor.Label" xml:space="preserve">
+    <value>Monitor</value>
+  </data>
+  <data name="Params.RefreshRateMonitor.Description" xml:space="preserve">
+    <value>Windows monitor slot.</value>
+  </data>
+  <data name="Errors.Cancelled" xml:space="preserve">
+    <value>The operation was cancelled.</value>
+  </data>
+  <data name="Errors.DisplayModeFailed" xml:space="preserve">
+    <value>Failed to set display mode: {message}</value>
+  </data>
+  <data name="Errors.BrightnessFailed" xml:space="preserve">
+    <value>Failed to change brightness: {message}</value>
+  </data>
+  <data name="Errors.RefreshRateFailed" xml:space="preserve">
+    <value>Failed to change refresh rate: {message}</value>
+  </data>
 </root>

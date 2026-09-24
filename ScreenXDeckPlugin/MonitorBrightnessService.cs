@@ -52,25 +52,92 @@ public sealed class MonitorBrightnessService
         try
         {
             using var monitor = GetDdcMonitor(monitorIndex);
-            int? current = null;
             if (monitor is not null && monitor.TryGetBrightness(out var value, out _))
-                current = value;
-            return Task.FromResult(current);
+                return Task.FromResult<int?>(value);
         }
         catch (Exception ex)
         {
             _logger.LogDebug(ex, "Unable to read DDC/CI monitor {MonitorIndex}.", monitorIndex + 1);
-            return Task.FromResult<int?>(null);
         }
+
+        if (monitorIndex == 0)
+        {
+            try
+            {
+                using var levels = new ManagementObjectSearcher(
+                    "root\\WMI",
+                    "SELECT CurrentBrightness FROM WmiMonitorBrightness WHERE Active = TRUE").Get();
+                var value = levels.Cast<ManagementObject>().FirstOrDefault()?["CurrentBrightness"];
+                if (value is not null)
+                    return Task.FromResult<int?>(Convert.ToInt32(value, System.Globalization.CultureInfo.InvariantCulture));
+            }
+            catch (ManagementException ex)
+            {
+                _logger.LogDebug(ex, "WMI brightness read is unavailable for monitor 1.");
+            }
+        }
+
+        try
+        {
+            var screenMonitor = _monitors.GetMonitors().FirstOrDefault(m => m.Index == monitorIndex + 1);
+            if (screenMonitor is { SupportsBrightness: true })
+                return Task.FromResult<int?>(screenMonitor.BrightnessPercent);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Software brightness read is unavailable for monitor {MonitorIndex}.", monitorIndex + 1);
+        }
+
+        return Task.FromResult<int?>(null);
     }
 
     public Task SetDdcBrightnessAsync(int monitorIndex, int brightness, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
-        using var monitor = GetDdcMonitor(monitorIndex);
-        if (monitor is null || !monitor.TrySetBrightness(Math.Clamp(brightness, 0, 100)))
-            throw new InvalidOperationException($"DDC/CI monitor {monitorIndex + 1} is unavailable.");
-        return Task.CompletedTask;
+        var target = Math.Clamp(brightness, 0, 100);
+
+        try
+        {
+            using var monitor = GetDdcMonitor(monitorIndex);
+            if (monitor is not null && monitor.TrySetBrightness(target))
+                return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "DDC/CI set brightness failed for monitor {MonitorIndex}.", monitorIndex + 1);
+        }
+
+        if (monitorIndex == 0)
+        {
+            try
+            {
+                using var methods = new ManagementObjectSearcher(
+                    "root\\WMI",
+                    "SELECT InstanceName FROM WmiMonitorBrightnessMethods WHERE Active = TRUE").Get();
+                var writableMonitors = methods.Cast<ManagementObject>().ToArray();
+                if (writableMonitors.Length > 0)
+                {
+                    writableMonitors[0].InvokeMethod("WmiSetBrightness", new object[] { 1, (byte)target });
+                    return Task.CompletedTask;
+                }
+            }
+            catch (ManagementException ex)
+            {
+                _logger.LogDebug(ex, "WMI brightness set failed for monitor 1.");
+            }
+        }
+
+        try
+        {
+            if (_monitors.TrySetBrightness(monitorIndex + 1, target))
+                return Task.CompletedTask;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogDebug(ex, "Software brightness set failed for monitor {MonitorIndex}.", monitorIndex + 1);
+        }
+
+        throw new InvalidOperationException($"Monitor {monitorIndex + 1} is unavailable.");
     }
 
     private Task SetBrightnessAsync(Func<int, int> calculate, CancellationToken cancellationToken)
