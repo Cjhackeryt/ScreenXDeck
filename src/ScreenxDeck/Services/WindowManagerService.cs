@@ -32,6 +32,8 @@ public sealed class WindowManagerService : IDisposable
 
     public bool IsForegroundWindowTopmost()
     {
+        if (!OperatingSystem.IsWindows()) return false;
+
         IntPtr hWnd = User32.GetForegroundWindow();
         if (hWnd == IntPtr.Zero) return false;
 
@@ -265,6 +267,8 @@ public sealed class WindowManagerService : IDisposable
 
     public (string title, string processName, int displayIndex) GetActiveWindowInfo()
     {
+        if (!OperatingSystem.IsWindows()) return ("Desktop", string.Empty, 0);
+
         IntPtr hWnd = User32.GetForegroundWindow();
         if (hWnd == IntPtr.Zero) return (string.Empty, string.Empty, 0);
 

@@ -98,8 +98,7 @@ public class UnitTests
         var supportsPushProp = typeof(IVariableProvider).GetProperty("SupportsPush");
         Console.WriteLine($"integration.SupportsPush: {supportsPushProp?.GetValue(integration)}");
 
-        var protoPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), @".nuget\packages\macrodeck.plugin.protocol\3.0.0-preview.10\lib\net10.0\MacroDeck.Plugin.Protocol.dll");
-        var protoAsm = System.Reflection.Assembly.LoadFrom(protoPath);
+        var protoAsm = System.Reflection.Assembly.Load("MacroDeck.Plugin.Protocol");
         var varsOpType = protoAsm.GetType("MacroDeck.Plugin.Protocol.Capabilities.CapabilityOperations+Variables");
         Console.WriteLine($"VarsOpType: {varsOpType}");
         var getMethod = handlerType.GetMethod("GetAsync", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
