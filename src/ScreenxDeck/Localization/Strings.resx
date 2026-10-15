@@ -154,6 +154,11 @@
   <data name="Actions.ToggleInputSource.SourceA.Label" xml:space="preserve"><value>Source A</value></data>
   <data name="Actions.ToggleInputSource.SourceB.Label" xml:space="preserve"><value>Source B</value></data>
 
+  <!-- Windows Power Plans -->
+  <data name="Actions.SetPowerPlan.Name" xml:space="preserve"><value>Set Power Plan</value></data>
+  <data name="Actions.SetPowerPlan.Description" xml:space="preserve"><value>Activates a Windows power plan selected by its display name.</value></data>
+  <data name="Actions.SetPowerPlan.PlanName.Label" xml:space="preserve"><value>Power Plan</value></data>
+
   <!-- Window Management Actions -->
   <data name="Actions.ToggleAlwaysOnTop.Name" xml:space="preserve"><value>Toggle Always on Top</value></data>
   <data name="Actions.ToggleAlwaysOnTop.Description" xml:space="preserve"><value>Pins or unpins the currently active window on top of all other windows.</value></data>

@@ -30,6 +30,7 @@ public sealed class ScreenxDeckIntegration : IPluginIntegration, IVariableProvid
     private readonly ResolutionRefreshService _resolutionRefreshService;
     private readonly TopologyService _topologyService;
     private readonly MonitorControlService _monitorControlService;
+    private readonly PowerPlanService _powerPlanService;
     private readonly ProfileService _profileService;
     private readonly WindowManagerService _windowManager;
     private readonly SettingsService _settingsService;
@@ -49,6 +50,7 @@ public sealed class ScreenxDeckIntegration : IPluginIntegration, IVariableProvid
         ResolutionRefreshService resolutionRefreshService,
         TopologyService topologyService,
         MonitorControlService monitorControlService,
+        PowerPlanService powerPlanService,
         ProfileService profileService,
         WindowManagerService windowManager,
         SettingsService settingsService)
@@ -59,6 +61,7 @@ public sealed class ScreenxDeckIntegration : IPluginIntegration, IVariableProvid
         _resolutionRefreshService = resolutionRefreshService;
         _topologyService = topologyService;
         _monitorControlService = monitorControlService;
+        _powerPlanService = powerPlanService;
         _profileService = profileService;
         _windowManager = windowManager;
         _settingsService = settingsService;
@@ -98,16 +101,19 @@ public sealed class ScreenxDeckIntegration : IPluginIntegration, IVariableProvid
         _actions.Add(new SwitchInputSourceAction(_monitorControlService, _logger));
         _actions.Add(new ToggleInputSourceAction(_monitorControlService, _logger));
 
-        // 8. Display Profiles
+        // 8. Windows Power Plans
+        _actions.Add(new SetPowerPlanAction(_powerPlanService, _logger));
+
+        // 9. Display Profiles
         _actions.Add(new ApplyProfileAction(_profileService, _logger));
         _actions.Add(new ToggleProfilesAction(_profileService, _logger));
 
-        // 9. Quick Toggles
+        // 10. Quick Toggles
         _actions.Add(new ToggleBrightnessAction(_brightnessService, _logger));
         _actions.Add(new ToggleRefreshRateAction(_resolutionRefreshService, _logger));
         _actions.Add(new ToggleResolutionAction(_resolutionRefreshService, _logger));
 
-        // 10. Window Management & Always on Top
+        // 11. Window Management & Always on Top
         _actions.Add(new ToggleAlwaysOnTopAction(_windowManager, _logger));
         _actions.Add(new UnpinAllWindowsAction(_windowManager, _logger));
         _actions.Add(new MoveWindowToDisplayAction(_windowManager, _logger));
@@ -273,6 +279,11 @@ public sealed class ScreenxDeckIntegration : IPluginIntegration, IVariableProvid
         {
             string prof = _settingsService.Current.ActiveProfileName;
             return ValueTask.FromResult(VariableReading.Of(!string.IsNullOrWhiteSpace(prof) ? prof : "Default"));
+        }
+
+        if (normName.Equals(ScreenxDeckVariables.ActivePowerPlan, StringComparison.OrdinalIgnoreCase))
+        {
+            return ValueTask.FromResult(VariableReading.Of(_powerPlanService.GetActivePowerPlanName() ?? "Unavailable"));
         }
 
         // Per-display checking 1 through 4 (connection, brightness, resolution, and refresh rate)
