@@ -23,6 +23,7 @@ public static class Program
             services.AddSingleton<ResolutionRefreshService>();
             services.AddSingleton<TopologyService>();
             services.AddSingleton<MonitorControlService>();
+            services.AddSingleton<PowerPlanService>();
             services.AddSingleton<ProfileService>();
             services.AddSingleton<WindowManagerService>();
         });

@@ -19,6 +19,7 @@ public static class ScreenxDeckVariables
     public const string ActiveWindowTopmost = "screenxdeck_active_window_topmost";
     public const string ActiveWindowTitle = "screenxdeck_active_window_title";
     public const string ActiveProfile = "screenxdeck_active_profile";
+    public const string ActivePowerPlan = "screenxdeck_active_power_plan";
 
     private static string ToLocalId(string name) => name.Replace('_', '-').ToLowerInvariant();
 
@@ -117,6 +118,13 @@ public static class ScreenxDeckVariables
                 DisplayName = (LocalizedText)"Active Display Profile",
                 Description = (LocalizedText)"Name of active display profile. Writable to apply profile!",
                 Write = new VariableWriteCapability { CommitOnRelease = true }
+            },
+            VariableDefinition.Eager(ActivePowerPlan, VariableType.Text, refreshInterval: TimeSpan.FromMilliseconds(2000)) with
+            {
+                Id = ToLocalId(ActivePowerPlan),
+                Name = ActivePowerPlan,
+                DisplayName = (LocalizedText)"Active Windows Power Plan",
+                Description = (LocalizedText)"Name of the currently active Windows power plan"
             }
         };
 

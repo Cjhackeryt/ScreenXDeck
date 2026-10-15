@@ -1,12 +1,12 @@
 # ScreenxDeck (Macro Deck 3 Plugin)
 
-[![Macro Deck Version](https://img.shields.io/badge/Macro%20Deck-v3.0.0--beta.13+-blue.svg)](https://macro-deck.app)
+[![Macro Deck Version](https://img.shields.io/badge/Macro%20Deck-v3.0.0--beta.17+-blue.svg)](https://macro-deck.app)
 [![Target Runtime](https://img.shields.io/badge/.NET-10.0-purple.svg)](https://dotnet.microsoft.com)
 [![Platform](https://img.shields.io/badge/Platform-Windows%2010%20%2F%2011%20x64-0078D6.svg)](https://microsoft.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 **Package ID:** `com.cjhackeryt.screenxdeck`  
-**Version:** `1.0.0`
+**Version:** `1.0.4`
 
 **ScreenxDeck** is a high-performance Windows display and window management plugin engineered specifically for **Macro Deck 3** on **.NET 10**. It transforms your Macro Deck stream deck into a command center for multi-monitor setups, hardware brightness control, resolution and refresh rate switching, display profiles, and window management.
 
@@ -82,20 +82,25 @@ ScreenxDeck gives Macro Deck 3 users fast, programmable control over Windows dis
 | `switch-input-source` | **Switch Monitor Input Source** | Switches input ports (HDMI 1/2, DisplayPort 1/2, USB-C, DVI, VGA) via DDC/CI VCP opcode `0x60`. |
 | `toggle-input-source` | **Toggle Input Sources** | Quick toggle between two selected input sources (e.g. HDMI 1 and DisplayPort 1). |
 
-### 9. Multi-Monitor Display Profiles
+### 9. Windows Power Plans
+| Action ID | Name | Description |
+|---|---|---|
+| `set-power-plan` | **Set Power Plan** | Activates a Windows power plan selected by its name from the installed power plans dropdown. |
+
+### 10. Multi-Monitor Display Profiles
 | Action ID | Name | Description |
 |---|---|---|
 | `apply-profile` | **Apply Display Profile** | Restores complete snapshot (topologies, resolutions, refresh rates, orientations, and brightness) for *Gaming*, *Work*, *Movie*, or *Custom*. |
 | `toggle-profiles` | **Toggle Display Profiles** | Toggles back and forth between two saved profiles (e.g. *Work* <-> *Gaming*). |
 
-### 10. Quick Toggles
+### 11. Quick Toggles
 | Action ID | Name | Description |
 |---|---|---|
 | `toggle-brightness` | **Toggle Brightness Levels** | Toggles between two configured brightness levels (e.g. 20% and 80%). |
 | `toggle-refresh-rate` | **Toggle Refresh Rates** | Toggles between two refresh rates (e.g. 60Hz and 144Hz). |
 | `toggle-resolution` | **Toggle Resolutions** | Toggles between two resolutions (e.g. 1080p and 1440p). |
 
-### 11. Window Management & Always on Top
+### 12. Window Management & Always on Top
 | Action ID | Name | Description |
 |---|---|---|
 | `toggle-always-on-top` | **Toggle Always on Top** | Pins or unpins the currently active window on top of all others. Implements dynamic button state: `"Pinned"` / `"Unpinned"`. |
@@ -109,7 +114,7 @@ ScreenxDeck gives Macro Deck 3 users fast, programmable control over Windows dis
 
 ## Reactive Variables Reference
 
-ScreenxDeck synchronizes 28 high-frequency variables with the Macro Deck host. This keeps simultaneous remote polls below the host dispatcher limit, so values remain available instead of flickering. In addition to reading values in labels (`{{ vars.screenxdeck_brightness }}%`), **variables are bidirectional**: you can bind Macro Deck's built-in **Slider Widget** directly to `screenxdeck_brightness` or `screenxdeck_display{N}_brightness` to control brightness in real time.
+ScreenxDeck synchronizes 29 high-frequency variables with the Macro Deck host. This keeps simultaneous remote polls below the host dispatcher limit, so values remain available instead of flickering. In addition to reading values in labels (`{{ vars.screenxdeck_brightness }}%`), **variables are bidirectional**: you can bind Macro Deck's built-in **Slider Widget** directly to `screenxdeck_brightness` or `screenxdeck_display{N}_brightness` to control brightness in real time.
 
 ### Default / Primary Display (Ideal for Slider Widgets)
 | Variable Name | Type | Description |
@@ -130,6 +135,7 @@ ScreenxDeck synchronizes 28 high-frequency variables with the Macro Deck host. T
 | `screenxdeck_active_window_topmost` | Boolean | `true` if currently active window is pinned Always-on-Top (Writable to toggle!). |
 | `screenxdeck_active_window_title` | Text | Title of the currently focused foreground window. |
 | `screenxdeck_active_profile` | Text | Name of the active display profile (Writable to apply!). |
+| `screenxdeck_active_power_plan` | Text | Name of the currently active Windows power plan. |
 
 ### Per-Monitor Variables (N = 1 to 4)
 | Variable Name | Type | Description |
@@ -144,10 +150,10 @@ ScreenxDeck synchronizes 28 high-frequency variables with the Macro Deck host. T
 ## Installation
 
 ### From Pre-built Package
-1. Get `com.cjhackeryt.screenxdeck-1.0.0.macrodeckplugin` from the `dist/` directory or GitHub Releases.
+1. Get `com.cjhackeryt.screenxdeck-1.0.4.macrodeckplugin` from the `dist/` directory or GitHub Releases.
 2. Open **Macro Deck 3**.
 3. Go to **Plugins** -> **Install from file**.
-4. Select `dist/com.cjhackeryt.screenxdeck-1.0.0.macrodeckplugin`.
+4. Select `dist/com.cjhackeryt.screenxdeck-1.0.4.macrodeckplugin`.
 5. Restart Macro Deck if prompted.
 
 ### From Source
@@ -167,7 +173,7 @@ dotnet test
 .\package.ps1
 ```
 The packaged archive will be generated at:
-`dist/com.cjhackeryt.screenxdeck-1.0.0.macrodeckplugin`
+`dist/com.cjhackeryt.screenxdeck-1.0.4.macrodeckplugin`
 
 ---
 
@@ -221,7 +227,7 @@ ScreenxDeck/
 │   │   └── Native/               # User32, Gdi32, Dxva2, CcdApi Win32 P/Invoke
 │   ├── Services/                 # DisplayManager, Brightness, Resolution, Topology,
 │   │                             # MonitorControl, Profile, WindowManager, Settings
-│   ├── Actions/                  # 27 Macro Deck Action Definitions & Executors
+│   ├── Actions/                  # 28 Macro Deck Action Definitions & Executors
 │   ├── Integration/              # ScreenxDeckIntegration (Actions & Variable sync)
 │   └── Localization/             # Strings.resx (Strongly typed source-generated)
 └── tests/ScreenxDeck.Tests/      # xUnit automated test suite (.NET 10)

@@ -30,6 +30,7 @@ public class UnitTests
         var resService = new ResolutionRefreshService(_logger, displayManager);
         var topologyService = new TopologyService(_logger, displayManager, settingsService);
         var monitorControl = new MonitorControlService(_logger, displayManager);
+        var powerPlanService = new PowerPlanService(_logger);
         var profileService = new ProfileService(_logger, displayManager, brightnessService, resService, topologyService, monitorControl, settingsService);
         var windowManager = new WindowManagerService(_logger, displayManager, settingsService);
 
@@ -40,6 +41,7 @@ public class UnitTests
             resService,
             topologyService,
             monitorControl,
+            powerPlanService,
             profileService,
             windowManager,
             settingsService);
@@ -138,6 +140,7 @@ public class UnitTests
         var resService = new ResolutionRefreshService(_logger, displayManager);
         var topologyService = new TopologyService(_logger, displayManager, settingsService);
         var monitorControl = new MonitorControlService(_logger, displayManager);
+        var powerPlanService = new PowerPlanService(_logger);
         var profileService = new ProfileService(_logger, displayManager, brightnessService, resService, topologyService, monitorControl, settingsService);
         var windowManager = new WindowManagerService(_logger, displayManager, settingsService);
 
@@ -148,6 +151,7 @@ public class UnitTests
             resService,
             topologyService,
             monitorControl,
+            powerPlanService,
             profileService,
             windowManager,
             settingsService);
@@ -156,13 +160,16 @@ public class UnitTests
         Assert.IsAssignableFrom<IVariableProvider>(integration);
         var provider = (IVariableProvider)integration;
 
-        // 2. Verify the 28 stable, high-value variables
+        // 2. Verify the 29 stable, high-value variables
         var variables = provider.Variables;
         Assert.NotNull(variables);
-        Assert.Equal(28, variables.Count);
+        Assert.Equal(29, variables.Count);
         Assert.False(provider.SupportsCatalog);
         Assert.All(variables, variable => Assert.Equal(VariableMaterialization.Eager, variable.Materialization));
-        Assert.Equal(28, variables.Select(variable => variable.Id).Distinct(StringComparer.Ordinal).Count());
+        Assert.Equal(29, variables.Select(variable => variable.Id).Distinct(StringComparer.Ordinal).Count());
+        var activePowerPlan = Assert.Single(variables, variable => variable.Name == ScreenxDeckVariables.ActivePowerPlan);
+        Assert.Equal(VariableType.Text, activePowerPlan.Type);
+        Assert.Null(activePowerPlan.Write);
 
         foreach (var v in variables)
         {
@@ -280,6 +287,7 @@ public class UnitTests
         var resService = new ResolutionRefreshService(_logger, displayManager);
         var topologyService = new TopologyService(_logger, displayManager, settingsService);
         var monitorControl = new MonitorControlService(_logger, displayManager);
+        var powerPlanService = new PowerPlanService(_logger);
         var profileService = new ProfileService(_logger, displayManager, brightnessService, resService, topologyService, monitorControl, settingsService);
         var windowManager = new WindowManagerService(_logger, displayManager, settingsService);
 
@@ -290,6 +298,7 @@ public class UnitTests
             resService,
             topologyService,
             monitorControl,
+            powerPlanService,
             profileService,
             windowManager,
             settingsService);
@@ -455,7 +464,7 @@ public class UnitTests
     }
 
     [Fact]
-    public void ScreenxDeckIntegration_RegistersAll27ActionsWithUniqueIds()
+    public void ScreenxDeckIntegration_RegistersAll28ActionsWithUniqueIds()
     {
         var settingsService = new SettingsService(_logger);
         var displayManager = new DisplayManagerService(_logger);
@@ -463,6 +472,7 @@ public class UnitTests
         var resService = new ResolutionRefreshService(_logger, displayManager);
         var topologyService = new TopologyService(_logger, displayManager, settingsService);
         var monitorControl = new MonitorControlService(_logger, displayManager);
+        var powerPlanService = new PowerPlanService(_logger);
         var profileService = new ProfileService(_logger, displayManager, brightnessService, resService, topologyService, monitorControl, settingsService);
         var windowManager = new WindowManagerService(_logger, displayManager, settingsService);
 
@@ -473,13 +483,14 @@ public class UnitTests
             resService,
             topologyService,
             monitorControl,
+            powerPlanService,
             profileService,
             windowManager,
             settingsService);
 
         var actions = integration.Actions;
         Assert.NotEmpty(actions);
-        Assert.Equal(27, actions.Count);
+        Assert.Equal(28, actions.Count);
 
         // Verify each action definition
         var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -518,6 +529,35 @@ public class UnitTests
         Assert.True(root.TryGetProperty("publisher", out var publisherProp));
         Assert.Equal("CJHackerYT", publisherProp.GetProperty("name").GetString());
         Assert.True(root.TryGetProperty("compatibility", out var compatProp));
-        Assert.Equal(">=3.0.0-beta.13", compatProp.GetProperty("macroDeck").GetString());
+        Assert.Equal("1.0.4", manifestVersion);
+        Assert.Equal(">=3.0.0-beta.17", compatProp.GetProperty("macroDeck").GetString());
+    }
+
+    [Fact]
+    public void PowerPlanService_RejectsInvalidGuid()
+    {
+        var service = new PowerPlanService(_logger);
+
+        Assert.False(service.SetActivePowerPlan("not-a-guid"));
+    }
+
+    [Fact]
+    public void PowerPlanService_ParsePowerPlans_ReturnsNamesAndActiveState()
+    {
+        const string output = """
+            Existing Power Schemes (* Active)
+            -----------------------------------
+            Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced) *
+            Power Scheme GUID: a1841308-3541-4fab-bc81-f71556f20b4a  (Power saver)
+            """;
+
+        IReadOnlyList<PowerPlan> plans = PowerPlanService.ParsePowerPlans(output);
+
+        Assert.Equal(2, plans.Count);
+        Assert.Equal("Balanced", plans[0].Name);
+        Assert.True(plans[0].IsActive);
+        Assert.Equal("381b4222-f694-41f0-9685-ff5bb260df2e", plans[0].Guid);
+        Assert.Equal("Power saver", plans[1].Name);
+        Assert.False(plans[1].IsActive);
     }
 }
