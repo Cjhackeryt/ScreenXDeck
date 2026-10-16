@@ -220,7 +220,7 @@ ScreenxDeck/
 ├── ScreenxDeck.slnx              # .NET 10 Solution
 ├── src/ScreenxDeck/
 │   ├── manifest.json             # Macro Deck 3 extension manifest
-│   ├── Assets/icon.svg           # High-resolution vector icon
+│   ├── Assets/plugin-icon.svg    # High-resolution vector icon
 │   ├── Program.cs                # Entry point & DI builder
 │   ├── Core/
 │   │   ├── Models/               # Display, Monitor, Profile, Settings models

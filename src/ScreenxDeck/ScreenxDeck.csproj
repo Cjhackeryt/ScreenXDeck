@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Content Include="manifest.json" CopyToOutputDirectory="PreserveNewest" />
-    <Content Include="Assets/icon.svg" CopyToOutputDirectory="PreserveNewest" />
+    <Content Include="Assets/plugin-icon.svg" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>
