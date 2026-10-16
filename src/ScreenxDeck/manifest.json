@@ -4,7 +4,7 @@
   "name": "ScreenxDeck",
   "version": "1.0.4",
   "description": "Comprehensive Windows display, multi-monitor, brightness, refresh rate, resolution, profiles, and window management controls for Macro Deck 3.",
-  "icon": "Assets/icon.svg",
+  "icon": "Assets/plugin-icon.svg",
   "entrypoints": {
     "win-x64": {
       "executable": "runtimes/win-x64/ScreenxDeck.dll",
@@ -19,6 +19,12 @@
   },
   "repository": "https://github.com/Cjhackeryt/ScreenXDeck",
   "license": "MIT",
+  "ai": {
+    "interaction": false,
+    "generatedContent": false,
+    "generatedAssets": true,
+    "services": []
+  },
   "compatibility": {
     "macroDeck": ">=3.0.0-beta.17"
   }
